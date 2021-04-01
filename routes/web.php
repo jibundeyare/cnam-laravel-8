@@ -15,3 +15,4 @@ use App\Http\Controllers\MainController;
 */
 
 Route::get('/', [MainController::class, 'index']);
+Route::get('/test', [MainController::class, 'test']);
