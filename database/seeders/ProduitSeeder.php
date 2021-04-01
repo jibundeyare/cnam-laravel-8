@@ -79,8 +79,8 @@ class ProduitSeeder extends Seeder
                 // les sous-catégories commence à l'id 7 et il y en a 19 en tout
                 'categorie_id' => random_int(7, 25),
                 'marque_id' => random_int(1, 10),
-                // l'id 3 correspond à la taille S
-                'taille_vetement_id' => 3,
+                // l'id 1 correspond à la taille M
+                'taille_vetement_id' => 1,
                 'created_at' => $faker->dateTimeBetween('-5 year', '-1 month')->format('Y-m-d H:i:s'),
             ]);
         }

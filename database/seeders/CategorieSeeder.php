@@ -37,7 +37,7 @@ class CategorieSeeder extends Seeder
         }
 
         // 19 sous-catégories
-        for ($i = 0; $i < 5; $i++) {
+        for ($i = 0; $i < 19; $i++) {
             $mots = random_int(1, 3);
 
             DB::table('categorie')->insert([
