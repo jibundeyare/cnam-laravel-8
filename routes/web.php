@@ -16,3 +16,4 @@ use App\Http\Controllers\MainController;
 
 Route::get('/', [MainController::class, 'index']);
 Route::get('/test', [MainController::class, 'test']);
+Route::match(['get', 'post'], '/search', [MainController::class, 'search']);
