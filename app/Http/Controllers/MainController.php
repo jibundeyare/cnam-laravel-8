@@ -14,7 +14,7 @@ class MainController extends Controller
         $name = 'Foo';
 
         return view('main.index', [
-            'name' => $name,
+            'title' => $name,
         ]);
     }
 

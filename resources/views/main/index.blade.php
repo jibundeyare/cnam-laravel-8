@@ -1,6 +1,6 @@
 @extends('app')
 
-@section('title', $name)
+@section('title', $title)
 
 @section('style')
     @parent
