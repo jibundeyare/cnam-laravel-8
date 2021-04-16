@@ -164,46 +164,59 @@ class MainController extends Controller
                 'upper_limit' => 'numeric|min:1|max:999|nullable',
             ]);
 
-            // on remplace les valeurs par défaut seulement si
+            // on remplace la valeur par défaut seulement si
             // le champ a été renseigné dans la formulaire
             if ($request->filled('keywords')) {
                 $formData['keywords'] = $validated['keywords'];
             }
 
+            // on remplace la valeur par défaut seulement si
+            // le champ a été renseigné dans la formulaire
             if ($request->filled('lower_limit')) {
                 $formData['lower_limit'] = $validated['lower_limit'];
             }
 
+            // on remplace la valeur par défaut seulement si
+            // le champ a été renseigné dans la formulaire
             if ($request->filled('upper_limit')) {
                 $formData['upper_limit'] = $validated['upper_limit'];
             }
         }
 
         // création de la requête de recherche de produits
-        $builder = Produit::select();
+        // cette requête sélectionne tous les produits
+        $queryBuilder = Produit::select();
 
-        $builder->where('prix', '>=', $formData['lower_limit']);
-        $builder->where('prix', '<=', $formData['upper_limit']);
+        // restriction de la sélection aux produits dont le prix est
+        // inférieur à la valeur spécifiée par l'utilisateur
+        $queryBuilder->where('prix', '>=', $formData['lower_limit']);
+
+        // restriction de la sélection aux produits dont le prix est
+        // supérieur à la valeur spécifiée par l'utilisateur
+        $queryBuilder->where('prix', '<=', $formData['upper_limit']);
 
         // on transforme la chaîne de caractère en tableau de mots
         // en se servant de l'espace ' ' comme séparateur
         $keywords = explode(' ', $formData['keywords']);
 
+        // on boucle sur la liste des mots clés
         foreach ($keywords as $keyword) {
-            $builder->where(function ($query) use ($keyword) {
+            // restriction de la sélection aux produits dont le nom ou la
+            // description contient le mot clé spécifié par l'utilisateur
+            $queryBuilder->where(function ($query) use ($keyword) {
                 $query->where('nom', 'like', "%$keyword%")
                 ->orWhere('description', 'like', "%$keyword%");
             });
         }
 
-        // le foreach ci-dessus construit des conditions comme ci-dessous :
+        // le foreach ci-dessus construit des conditions SQL comme ci-dessous :
         // (nom LIKE 'foo' OR description LIKE 'foo')
         // AND (nom LIKE 'bar' OR description LIKE 'bar')
         // AND (nom LIKE 'baz' OR description LIKE 'baz')
         // ...
 
         // exécution de la requête
-        $produits = $builder->get();
+        $produits = $queryBuilder->get();
 
         // le titre de la page
         $title = "search: keywords {$formData['keywords']}, lower limit {$formData['lower_limit']}, upper limit {$formData['upper_limit']}";
