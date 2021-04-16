@@ -40,26 +40,28 @@
             </div>
         </form>
 
-        <table>
-            <tr>
-                <th>nom</td>
-                <th>description</td>
-                <th>prix</td>
-                <th>marque</td>
-            </tr>
-            {{-- affichage du résultat de la requête --}}
-            @foreach ($produits as $produit)
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered">
                 <tr>
-                    <td>{{ $produit->nom }}</td>
-                    <td>{{ $produit->description }}</td>
-                    <td>{{ $produit->prix }}</td>
-                    {{-- une marque est un modèle (une classe) lié avec une relation « one to many » à un produit.
-                    Quand on utilise un ORM, il n'est pas nécessaire de faire de jointure pour
-                    avoir accès aux données reliées par une clé étrangère --}}
-                    <td>{{ $produit->marque->nom }}</td>
+                    <th>nom</td>
+                    <th>description</td>
+                    <th>prix</td>
+                    <th>marque</td>
                 </tr>
-            @endforeach
-        </table>
+                {{-- affichage du résultat de la requête --}}
+                @foreach ($produits as $produit)
+                    <tr>
+                        <td>{{ $produit->nom }}</td>
+                        <td>{{ $produit->description }}</td>
+                        <td>{{ $produit->prix }}</td>
+                        {{-- une marque est un modèle (une classe) lié avec une relation « one to many » à un produit.
+                        Quand on utilise un ORM, il n'est pas nécessaire de faire de jointure pour
+                        avoir accès aux données reliées par une clé étrangère --}}
+                        <td>{{ $produit->marque->nom }}</td>
+                    </tr>
+                @endforeach
+            </table>
+        </div>
 
     </div>
 

@@ -130,11 +130,14 @@ class MainController extends Controller
         // et recherche par mot clé dans le nom ou la description
 
         // valeurs par défaut
-        $keywords = '';
-        $lowerLimit = 0.0;
-        $upperLimit = 999.0;
+        $formData = [
+            'keywords' => '',
+            'lower_limit' => 0.0,
+            'upper_limit' => 999.0,
+        ];
 
         // on vérifie si l'utilisateur en envoyé des données ou pas
+        // $request->all() renvoit l'équivalent de la variable $_POST
         if ($request->all()) {
             // l'utilisateur a validé le formulaire
 
@@ -152,29 +155,46 @@ class MainController extends Controller
             // on remplace les valeurs par défaut seulement si
             // le champ a été renseigné dans la formulaire
             if ($request->filled('keywords')) {
-                $keywords = $validated['keywords'];
+                $formData['keywords'] = $validated['keywords'];
             }
 
             if ($request->filled('lower_limit')) {
-                $lowerLimit = $validated['lower_limit'];
+                $formData['lower_limit'] = $validated['lower_limit'];
             }
 
             if ($request->filled('upper_limit')) {
-                $upperLimit = $validated['upper_limit'];
+                $formData['upper_limit'] = $validated['upper_limit'];
             }
         }
 
-        // la requête de recherche de produits
-        $produits = Produit::where('prix', '>=', $lowerLimit)
-            ->where('prix', '<=', $upperLimit)
-            ->where(function ($query) use ($keywords) {
-                $query->where('nom', 'like', "%$keywords%")
-                ->orWhere('description', 'like', "%$keywords%");
-            })
-            ->get();
+        // création de la requête de recherche de produits
+        $builder = Produit::select();
+
+        $builder->where('prix', '>=', $formData['lower_limit']);
+        $builder->where('prix', '<=', $formData['upper_limit']);
+
+        // on transforme la chaîne de caractère en tableau de mots
+        // en se servant de l'espace ' ' comme séparateur
+        $keywords = explode(' ', $formData['keywords']);
+
+        foreach ($keywords as $keyword) {
+            $builder->where(function ($query) use ($keyword) {
+                $query->where('nom', 'like', "%$keyword%")
+                ->orWhere('description', 'like', "%$keyword%");
+            });
+        }
+
+        // le foreach ci-dessus construit des conditions comme ci-dessous :
+        // (nom LIKE 'foo' OR description LIKE 'foo')
+        // AND (nom LIKE 'bar' OR description LIKE 'bar')
+        // AND (nom LIKE 'baz' OR description LIKE 'baz')
+        // ...
+
+        // exécution de la requête
+        $produits = $builder->get();
 
         // le titre de la page
-        $title = "search: keywords $keywords, lower limit $lowerLimit, upper limit $upperLimit";
+        $title = "search: keywords {$formData['keywords']}, lower limit {$formData['lower_limit']}, upper limit {$formData['upper_limit']}";
 
         // afichage de la vue
         return view('main.search', [
