@@ -128,19 +128,52 @@ class MainController extends Controller
     {
         // recherche par fourchette de prix
         // et recherche par mot clé dans le nom ou la description
-        $lowerLimit = $request->input('lower_limit', 0.0);
-        $upperLimit = $request->input('upper_limit', 0.0);
-        $keyword = $request->input('nom', '');
 
+        // valeurs par défaut
+        $keywords = '';
+        $lowerLimit = 0.0;
+        $upperLimit = 999.0;
+
+        // on vérifie si l'utilisateur en envoyé des données ou pas
+        if ($request->all()) {
+            // l'utilisateur a validé le formulaire
+
+            // sauvegarde des données du formulaire pour pouvoir les
+            // afficher dans le template avec la fonction old()
+            $request->flash();
+
+            // validation des données du formulaire
+            $validated = $request->validate([
+                'keywords' => 'string|max:100|nullable',
+                'lower_limit' => 'numeric|min:0|max:999|nullable',
+                'upper_limit' => 'numeric|min:1|max:999|nullable',
+            ]);
+
+            // on remplace les valeurs par défaut seulement si
+            // le champ a été renseigné dans la formulaire
+            if ($request->filled('keywords')) {
+                $keywords = $validated['keywords'];
+            }
+
+            if ($request->filled('lower_limit')) {
+                $lowerLimit = $validated['lower_limit'];
+            }
+
+            if ($request->filled('upper_limit')) {
+                $upperLimit = $validated['upper_limit'];
+            }
+        }
+
+        // la requête de recherche de produits
         $produits = Produit::where('prix', '>=', $lowerLimit)
             ->where('prix', '<=', $upperLimit)
-            ->where(function ($query) use ($keyword) {
-                $query->where('nom', 'like', "%$keyword%")
-                ->orWhere('description', 'like', "%$keyword%");
+            ->where(function ($query) use ($keywords) {
+                $query->where('nom', 'like', "%$keywords%")
+                ->orWhere('description', 'like', "%$keywords%");
             })
             ->get();
 
-        $title = "search: keyword $keyword, lower limit $lowerLimit, upper limit $upperLimit";
+        $title = "search: keywords $keywords, lower limit $lowerLimit, upper limit $upperLimit";
 
         return view('main.search', [
             'title' => $title,

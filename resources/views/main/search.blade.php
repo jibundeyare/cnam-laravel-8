@@ -9,16 +9,26 @@
 
 @section('content')
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <form method="post">
         @csrf
         <div>
-            <input type="text" name="nom" id="nom">
+            <input type="text" name="keywords" id="keywords" value="{{ old('keywords') }}">
         </div>
         <div>
-            <input type="number" name="lower_limit" id="lower_limit">
+            <input type="number" name="lower_limit" id="lower_limit" value="{{ old('lower_limit') }}">
         </div>
         <div>
-            <input type="number" name="upper_limit" id="upper_limit">
+            <input type="number" name="upper_limit" id="upper_limit" value="{{ old('upper_limit') }}">
         </div>
         <div>
         <button type="submit">chercher</button>
