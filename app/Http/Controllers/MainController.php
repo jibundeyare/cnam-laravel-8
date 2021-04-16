@@ -173,8 +173,10 @@ class MainController extends Controller
             })
             ->get();
 
+        // le titre de la page
         $title = "search: keywords $keywords, lower limit $lowerLimit, upper limit $upperLimit";
 
+        // afichage de la vue
         return view('main.search', [
             'title' => $title,
             'produits' => $produits,
