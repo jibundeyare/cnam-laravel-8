@@ -41,7 +41,7 @@
         </form>
 
         <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered">
+            <table class="table table-dark table-striped table-hover table-bordered">
                 <tr>
                     <th>nom</td>
                     <th>description</td>
