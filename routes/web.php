@@ -27,13 +27,17 @@ Route::get('/test', [MainController::class, 'test']);
 // requête de type GET ou POST
 Route::match(['get', 'post'], '/search', [MainController::class, 'search']);
 
-// pages CRUD de marques
-// Verb 	URI 	Action 	Route Name
-// GET 	/photos 	index 	photos.index
-// GET 	/photos/create 	create 	photos.create
-// POST 	/photos 	store 	photos.store
-// GET 	/photos/{photo} 	show 	photos.show
-// GET 	/photos/{photo}/edit 	edit 	photos.edit
-// PUT/PATCH 	/photos/{photo} 	update 	photos.update
-// DELETE 	/photos/{photo} 	destroy 	photos.destroy
+// pages CRUD pour la ressource marques
+//
+// voici les routes qui sont automatiquement créés :
+// méthode      URI                     fonction    nom de la route
+// GET          /marques                index       marques.index
+// GET          /marques/create         create      marques.create
+// POST         /marques                store       marques.store
+// GET          /marques/{marque}       show        marques.show
+// GET          /marques/{marque}/edit  edit        marques.edit
+// PUT/PATCH    /marques/{marque}       update      marques.update
+// DELETE       /marques/{marque}       destroy     marques.destroy
+//
+// {marque} désigne un emplacement dans l'URL qui doit être remplacé par l'id d'une marque stockée en BDD
 Route::resource('marques', MarqueController::class);
