@@ -20,14 +20,15 @@ class MainController extends Controller
 
     public function test()
     {
-        // méthode moderne avec l'orm eloquent
+        // recherche de toutes les marques
+        // méthode orientée objet avec l'orm eloquent
         foreach (Marque::all() as $marque):
             ?>
-            marque: <?= $marque->nom ?><br>
+            <h2>marque: <?= $marque->marque_id ?> <?= $marque->nom ?></h2>
             <?php
             foreach ($marque->produits()->get() as $produit):
                 ?>
-                produit: <?= $produit->nom ?><br>
+                produit: <?= $produit->produit_id ?> <?= $produit->nom ?><br>
                 <?php
             endforeach;
             ?>
@@ -35,41 +36,55 @@ class MainController extends Controller
             <?php
         endforeach;
 
+        // recherche de tous les produits
+        // méthode orientée objet avec l'orm eloquent
         foreach (Produit::all() as $produit):
             ?>
-            produit: <?= $produit->nom ?><br>
-            marque: <?= $produit->marque->nom ?><br>
-            <br>
+            <p>
+                produit: <?= $produit->produit_id ?> <?= $produit->nom ?><br>
+                marque: <?= $marque->marque_id ?> <?= $produit->marque->nom ?>
+            </p>
             <?php
         endforeach;
 
-        // méthode old school avec une requête sql
+        // recherche de toutes les marques
+        // méthode relationnelle avec une requête sql
         $sql = 'SELECT marque.marque_id, marque.nom AS marque_nom, produit.produit_id, produit.nom AS produit_nom
         FROM marque
         INNER JOIN produit ON produit.marque_id = marque.marque_id';
         $rows = DB::select($sql);
-
-        // echo '<pre>';
-        // var_dump($marques);
-        // echo '</pre>';
 
         $marque_id_precedent = 0;
 
         foreach ($rows as $row):
             ?>
             <?php if ($row->marque_id != $marque_id_precedent): ?>
-            <h2><?= $row->marque_id ?> <?= $row->marque_nom ?></h2>
+                <h2>marque: <?= $row->marque_id ?> <?= $row->marque_nom ?></h2>
             <?php endif ?>
+                produit: <?= $row->produit_id ?> <?= $row->produit_nom ?><br>
+            <?php
+            $marque_id_precedent = $row->marque_id;
+        endforeach;
+
+        // recherche de tous les produits
+        // méthode relationnelle avec une requête sql
+        $sql = 'SELECT produit.produit_id, produit.nom AS produit_nom, marque.marque_id, marque.nom AS marque_nom
+        FROM produit
+        INNER JOIN marque ON marque.marque_id = produit.marque_id';
+        $rows = DB::select($sql);
+
+        foreach ($rows as $row):
+            ?>
             <p>
-                - <?= $row->produit_id ?> <?= $row->produit_nom ?>
+                produit: <?= $row->produit_id ?> <?= $row->produit_nom ?><br>
+                marque: <?= $row->marque_id ?> <?= $row->marque_nom ?>
             </p>
             <?php
             $marque_id_precedent = $row->marque_id;
         endforeach;
 
-        exit();
-
         // recherche par mot clé dans le nom ou la description
+        // méthode orientée objet avec l'orm eloquent
         $keyword = 'lorem';
 
         $produits = Produit::where('nom', 'like', "%$keyword%")
@@ -85,6 +100,7 @@ class MainController extends Controller
         echo '<br>';
 
         // recherche par fourchette de prix
+        // méthode orientée objet avec l'orm eloquent
         $lowerLimit = 10.0;
         $upperLimit = 20.0;
 
@@ -102,6 +118,7 @@ class MainController extends Controller
 
         // recherche par fourchette de prix
         // et recherche par mot clé dans le nom ou la description
+        // méthode orientée objet avec l'orm eloquent
         $keyword = 'lorem';
 
         $produits = Produit::where('prix', '>=', $lowerLimit)
@@ -117,11 +134,6 @@ class MainController extends Controller
             <?= $produit->nom ?> <?= substr($produit->description, 0, 50) ?><?php if (strlen($produit->description) > 50):?>...<?php endif?> <?= $produit->prix ?><br>
             <?php
         endforeach;
-
-        echo '<br>';
-
-        exit();
-
     }
 
     public function search(Request $request)
