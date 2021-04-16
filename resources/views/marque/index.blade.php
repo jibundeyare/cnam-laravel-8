@@ -22,7 +22,9 @@
                         <td>
                             <a href="{{ route('marques.show', ['marque' => $marque->marque_id]) }}" >{{ $marque->nom }}</a>
                         </td>
-                        <td>{{ $marque->description }}</td>
+                        {{-- on tronque la description à partir 80 caractères et on affiche trois petits points '...'
+                        Mais si la description est plus courte que 80 caractères, les trois petits poin,ts ne sont pas affichés --}}
+                        <td>{{ Str::limit($marque->description, 80, '...') }}</td>
                         <td>{{ $marque->created_at }}</td>
                         <td>{{ $marque->updated_at }}</td>
                         <td>

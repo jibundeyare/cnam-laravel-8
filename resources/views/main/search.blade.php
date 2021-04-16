@@ -11,29 +11,35 @@
 
     <div class="container">
 
-        {{-- affichage des messages d'erreur --}}
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
-
         <form method="post">
             {{-- protection obligatoire contre les attaques CSRF --}}
             @csrf
             <div>
-                {{-- affichage d'un champ avec l'ancienne valeur entrée par l'utilisateur --}}
-                <input type="text" name="keywords" id="keywords" value="{{ old('keywords') }}">
+                {{-- affichage d'un champ avec la valeur entrée par l'utilisateur.
+                Ajout de la classe css is-invalid s'il y a une erreur --}}
+                <input type="text" name="keywords" id="keywords" value="{{ old('keywords') }}" class="@error('keywords') is-invalid @enderror">
+                {{-- affichage des messages d'erreur du champ --}}
+                @error('keywords')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div>
-                <input type="number" name="lower_limit" id="lower_limit" value="{{ old('lower_limit') }}">
+                {{-- affichage d'un champ avec la valeur entrée par l'utilisateur.
+                Ajout de la classe css is-invalid s'il y a une erreur --}}
+                <input type="number" name="lower_limit" id="lower_limit" value="{{ old('lower_limit') }}" class="@error('lower_limit') is-invalid @enderror">
+                {{-- affichage des messages d'erreur du champ --}}
+                @error('lower_limit')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div>
-                <input type="number" name="upper_limit" id="upper_limit" value="{{ old('upper_limit') }}">
+                {{-- affichage d'un champ avec la valeur entrée par l'utilisateur.
+                Ajout de la classe css is-invalid s'il y a une erreur --}}
+                <input type="number" name="upper_limit" id="upper_limit" value="{{ old('upper_limit') }}" class="@error('upper_limit') is-invalid @enderror">
+                {{-- affichage des messages d'erreur du champ --}}
+                @error('upper_limit')
+                    <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
             <div>
             <button type="submit">chercher</button>
