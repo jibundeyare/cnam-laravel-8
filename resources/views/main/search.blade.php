@@ -14,6 +14,7 @@
         <form method="post">
             {{-- protection obligatoire contre les attaques CSRF --}}
             @csrf
+
             <div>
                 {{-- affichage d'un champ avec la valeur entrée par l'utilisateur.
                 Ajout de la classe css is-invalid s'il y a une erreur --}}

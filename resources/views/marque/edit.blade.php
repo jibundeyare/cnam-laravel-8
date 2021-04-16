@@ -9,6 +9,7 @@
         <form action="{{ route('marques.update', ['marque' => $marque->marque_id]) }}" method="post">
             {{-- protection obligatoire contre les attaques CSRF --}}
             @csrf
+
             {{-- il faut spécifier la méthode PUT car la route marques.update
             n'est requêtable qu'avec cette méthode --}}
             @method('PUT')
