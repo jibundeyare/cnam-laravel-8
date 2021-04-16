@@ -28,6 +28,8 @@ class TailleVetement extends Model
      */
     public function produits()
     {
+        // clé étrangère de l'autre table : produit.taille_vetement_id
+        // clé primaire de cette table : taille_vetement.taille_vetement_id
         return $this->hasMany(Produit::class, 'taille_vetement_id', 'taille_vetement_id');
     }
 }

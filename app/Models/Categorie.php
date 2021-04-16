@@ -28,6 +28,8 @@ class Categorie extends Model
      */
     public function produits()
     {
+        // clé étrangère de l'autre table : produit.categorie_id
+        // clé primaire de cette table : categorie.categorie_id
         return $this->hasMany(Produit::class, 'categorie_id', 'categorie_id');
     }
 }

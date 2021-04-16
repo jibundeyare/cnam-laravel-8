@@ -28,6 +28,8 @@ class Marque extends Model
      */
     public function produits()
     {
+        // clé étrangère de l'autre table : produit.marque_id
+        // clé primaire de cette table : marque.marque_id
         return $this->hasMany(Produit::class, 'marque_id', 'marque_id');
     }
 }

@@ -21,15 +21,53 @@ class MainController extends Controller
     public function test()
     {
         // méthode moderne avec l'orm eloquent
-        // foreach (Marque::all() as $marque) {
-        //     echo $marque->nom;
-        //     echo '<br>';
+        foreach (Marque::all() as $marque):
+            ?>
+            marque: <?= $marque->nom ?><br>
+            <?php
+            foreach ($marque->produits()->get() as $produit):
+                ?>
+                produit: <?= $produit->nom ?><br>
+                <?php
+            endforeach;
+            ?>
+            <br>
+            <?php
+        endforeach;
 
-        //     foreach ($marque->produits() as $produit) {
-        //         echo $produit->nom;
-        //         echo '<br>';
-        //     }
-        // }
+        foreach (Produit::all() as $produit):
+            ?>
+            produit: <?= $produit->nom ?><br>
+            marque: <?= $produit->marque->nom ?><br>
+            <br>
+            <?php
+        endforeach;
+
+        // méthode old school avec une requête sql
+        $sql = 'SELECT marque.marque_id, marque.nom AS marque_nom, produit.produit_id, produit.nom AS produit_nom
+        FROM marque
+        INNER JOIN produit ON produit.marque_id = marque.marque_id';
+        $rows = DB::select($sql);
+
+        // echo '<pre>';
+        // var_dump($marques);
+        // echo '</pre>';
+
+        $marque_id_precedent = 0;
+
+        foreach ($rows as $row):
+            ?>
+            <?php if ($row->marque_id != $marque_id_precedent): ?>
+            <h2><?= $row->marque_id ?> <?= $row->marque_nom ?></h2>
+            <?php endif ?>
+            <p>
+                - <?= $row->produit_id ?> <?= $row->produit_nom ?>
+            </p>
+            <?php
+            $marque_id_precedent = $row->marque_id;
+        endforeach;
+
+        exit();
 
         // recherche par mot clé dans le nom ou la description
         $keyword = 'lorem';
@@ -84,31 +122,6 @@ class MainController extends Controller
 
         exit();
 
-        // méthode old school avec une requête sql
-        $sql = 'SELECT marque.marque_id, marque.nom AS marque_nom, produit.produit_id, produit.nom AS produit_nom
-        FROM marque
-        INNER JOIN produit ON produit.marque_id = marque.marque_id';
-        $rows = DB::select($sql);
-
-        // echo '<pre>';
-        // var_dump($marques);
-        // echo '</pre>';
-
-        $marque_id_precedent = 0;
-
-        foreach ($rows as $row):
-            ?>
-            <?php if ($row->marque_id != $marque_id_precedent): ?>
-            <h2><?= $row->marque_id ?> <?= $row->marque_nom ?></h2>
-            <?php endif ?>
-            <p>
-                - <?= $row->produit_id ?> <?= $row->produit_nom ?>
-            </p>
-            <?php
-            $marque_id_precedent = $row->marque_id;
-        endforeach;
-
-        exit();
     }
 
     public function search(Request $request)

@@ -28,9 +28,9 @@ class Produit extends Model
      */
     public function categorie()
     {
-        // categorie_id : la clé primaire de la table categorie (c-à-d la clé étrangère)
-        // produit_id : la clé primaire de la table produit
-        return $this->belongsTo(Categorie::class, 'categorie_id', 'produit_id');
+        // clé primaire de l'autre table : categorie.categorie_id
+        // clé étrangère de cette table : produit.categorie_id
+        return $this->belongsTo(Categorie::class, 'categorie_id', 'categorie_id');
     }
 
     /**
@@ -38,9 +38,9 @@ class Produit extends Model
      */
     public function marque()
     {
-        // marque_id : la clé primaire de la table marque (c-à-d la clé étrangère)
-        // produit_id : la clé primaire de la table produit
-        return $this->belongsTo(Marque::class, 'marque_id', 'produit_id');
+        // clé primaire de l'autre table : marque.marque_id
+        // clé étrangère de cette table : produit.marque_id
+        return $this->belongsTo(Marque::class, 'marque_id', 'marque_id');
     }
 
     /**
@@ -48,8 +48,8 @@ class Produit extends Model
      */
     public function tailleVetement()
     {
-        // taille_vetement_id : la clé primaire de la table taille_vetement (c-à-d la clé étrangère)
-        // produit_id : la clé primaire de la table produit
-        return $this->belongsTo(TailleVetement::class, 'taille_vetement_id', 'produit_id');
+        // clé primaire de l'autre table : taille_vetement.taille_vetement_id
+        // clé étrangère de cette table : produit.taille_vetement_id
+        return $this->belongsTo(TailleVetement::class, 'taille_vetement_id', 'taille_vetement_id');
     }
 }
