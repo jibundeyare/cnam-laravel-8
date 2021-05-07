@@ -7,7 +7,15 @@
     <div class="container">
 
         <div>
-            <input type="text" id="marque_id" value="{{ $marque->marque_id }}" readonly>
+            <ul>
+                <li>
+                    <a href="{{ route('marques.index') }}" class="btn btn-primary">voir la liste</a>
+                </li>
+            </ul>
+        </div>
+
+        <div>
+            <input type="text" id="marque_id" value="{{ $marque->marque_id }}" disabled>
         </div>
         <div>
             <input type="text" name="nom" id="nom" value="{{ $marque->nom }}" readonly>
@@ -23,7 +31,22 @@
         </div>
 
         <div>
-            <a href="{{ route('marques.edit', ['marque' => $marque->marque_id]) }}" >modifier</a>
+            <ul>
+                <li>
+                    <a href="{{ route('marques.edit', ['marque' => $marque->marque_id]) }}" class="btn btn-primary">modifier</a>
+                </li>
+                <li>
+                    <form action="{{ route('marques.destroy', ['marque' => $marque->marque_id]) }}" method="post">
+                        {{-- protection obligatoire contre les attaques CSRF --}}
+                        @csrf
+
+                        {{-- il faut spécifier la méthode DELETE car la route marques.destroy
+                        n'est requêtable qu'avec cette méthode --}}
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">supprimer</button>
+                    </form>
+                </li>
+            </ul>
         </div>
 
     </div>

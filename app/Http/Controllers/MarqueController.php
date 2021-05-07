@@ -14,7 +14,8 @@ class MarqueController extends Controller
      */
     public function index()
     {
-        $title = 'marques';
+        // création du titre
+        $title = 'liste des marques';
 
         // recherche de toutes les marques
         $marques = Marque::all();
@@ -33,7 +34,13 @@ class MarqueController extends Controller
      */
     public function create()
     {
-        //
+        // création du titre
+        $title = "création d'une marque";
+
+        // affichage de la vue
+        return view('marque.create', [
+            'title' => $title,
+        ]);
     }
 
     /**
@@ -44,7 +51,23 @@ class MarqueController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // validation des données envoyées par l'utilisateur
+        $request->validate([
+            'nom' => 'string|max:100|required',
+            'description' => 'string|max:1000|nullable'
+        ]);
+
+        // création d'une nouvelle marque
+        $marque = new Marque();
+        // affectation des données de la marque
+        $marque->nom = $request->nom;
+        $marque->description = $request->description;
+
+        // enregistrement des nouvelles données de la marque
+        $marque->save();
+
+        // redirection vers la page de la marque
+        return redirect()->route('marques.show', ['marque' => $marque]);
     }
 
     /**
@@ -82,7 +105,7 @@ class MarqueController extends Controller
         // création du titre à partir des données de la marque demandée
         $title = "marque : {$marque->nom} ($id)";
 
-        // afichage de la vue
+        // affichage de la vue
         return view('marque.edit', [
             'title' => $title,
             'marque' => $marque,
@@ -98,7 +121,23 @@ class MarqueController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // @todo valider les données et les enregistrer
+        // validation des données envoyées par l'utilisateur
+        $request->validate([
+            'nom' => 'string|max:100|required',
+            'description' => 'string|max:1000|nullable'
+        ]);
+
+        // recherche d'une marque à partir de l'id spécifié
+        $marque = Marque::find($id);
+        // mise à jour des données de la marque
+        $marque->nom = $request->nom;
+        $marque->description = $request->description;
+
+        // enregistrement des données de la marque
+        $marque->save();
+
+        // redirection vers la page de la marque
+        return redirect()->route('marques.show', ['marque' => $marque]);
     }
 
     /**
@@ -107,8 +146,24 @@ class MarqueController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        // recherche d'une marque à partir de l'id spécifié
+        $marque = Marque::find($id);
+
+        // on vérifie si la marque est référencée par un produit
+        if (count($marque->produits()->get()) > 0) {
+            // la marque est référencée par des produits
+            // on ne peut pas la supprimer
+            $request->session()->flash('warning', 'Impossible de supprimer cette marque car elle est référencée par un produit');
+        } else {
+            // la marque n'est référencée par aucun produit
+            // elle est supprimée
+            $marque->delete();
+            $request->session()->flash('success', 'Marque supprimée');
+        }
+
+        // redirection vers la liste des marques
+        return redirect()->route('marques.index');
     }
 }

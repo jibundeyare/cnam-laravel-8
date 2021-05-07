@@ -166,19 +166,19 @@ class MainController extends Controller
             ]);
 
             // on remplace la valeur par défaut seulement si
-            // le champ a été renseigné dans la formulaire
+            // le champ a été renseigné dans le formulaire
             if ($request->filled('keywords')) {
                 $formData['keywords'] = $validated['keywords'];
             }
 
             // on remplace la valeur par défaut seulement si
-            // le champ a été renseigné dans la formulaire
+            // le champ a été renseigné dans le formulaire
             if ($request->filled('lower_limit')) {
                 $formData['lower_limit'] = $validated['lower_limit'];
             }
 
             // on remplace la valeur par défaut seulement si
-            // le champ a été renseigné dans la formulaire
+            // le champ a été renseigné dans le formulaire
             if ($request->filled('upper_limit')) {
                 $formData['upper_limit'] = $validated['upper_limit'];
             }
