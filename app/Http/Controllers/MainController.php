@@ -11,10 +11,11 @@ class MainController extends Controller
 {
     public function index()
     {
-        $name = 'Foo';
+        $title = 'Foo';
 
+        // affichage de la vue
         return view('main.index', [
-            'title' => $name,
+            'title' => $title,
         ]);
     }
 

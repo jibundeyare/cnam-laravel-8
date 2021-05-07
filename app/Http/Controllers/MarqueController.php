@@ -16,9 +16,10 @@ class MarqueController extends Controller
     {
         $title = 'marques';
 
+        // recherche de toutes les marques
         $marques = Marque::all();
 
-        // afichage de la vue
+        // affichage de la vue
         return view('marque.index', [
             'title' => $title,
             'marques' => $marques,
@@ -54,11 +55,13 @@ class MarqueController extends Controller
      */
     public function show($id)
     {
+        // recherche d'une marque à partir de l'id spécifié
         $marque = Marque::find($id);
 
+        // création du titre à partir des données de la marque demandée
         $title = "marque : {$marque->nom} ($id)";
 
-        // afichage de la vue
+        // affichage de la vue
         return view('marque.show', [
             'title' => $title,
             'marque' => $marque,
@@ -73,8 +76,10 @@ class MarqueController extends Controller
      */
     public function edit($id)
     {
+        // recherche d'une marque à partir de l'id spécifié
         $marque = Marque::find($id);
 
+        // création du titre à partir des données de la marque demandée
         $title = "marque : {$marque->nom} ($id)";
 
         // afichage de la vue
